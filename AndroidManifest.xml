@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.vindsiden.windwidget"
+          android:versionCode="1"
+          android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="18"/>
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+        <activity android:name="MyActivity"
+                  android:label="MyActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="Settings"
+                  android:label="Settings"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".WidgetSettings"
+                  android:label="WidgetSettings"
+                  android:theme="@android:style/Theme.Holo.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+
+
+        </activity>
+
+
+        <receiver
+                android:name=".VindsidenAppWidgetProvider"
+                android:label="WindWidget">
+            <intent-filter>
+                <action
+                        android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/initial_app_widget_provider_config"/>
+        </receiver>
+
+        <service
+                android:name=".VindsidenAppWidgetService"/>
+    </application>
+</manifest>
