@@ -20,6 +20,7 @@ public class Measurement {
     private final String tag = AppWidgetProvider.class.getName(); // getSimpleName());
 
     private final String stationID, time, windAvg, directionAvg,windMax,windMin,temprature;
+    //s
 
     public Measurement(String stationID, String time, String windAvg, String windMax,String windMin, String temprature, String directionAvg) {
         Log.d("vindsiden" + tag, "Measurement created: Station: " + stationID + " time " + time + " windAvg: " + windAvg + " dir: " + directionAvg +" windmax: " + windMax +" windmin: " + windMin +" teno: " + temprature);
