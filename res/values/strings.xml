@@ -1,40 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WindWidget</string>
+    <string name="app_name">Vindsiden</string>
+
     <string name="xml_error">XML error. off. off.</string>
     <string name="connection_error">Connection error. off. off.</string>
     <string name="dummyText">Initializing pls wait</string>
-    
+    <string name="about">Dette er en applikasjon som henter xml fra Vindsiden.no og dermed viser det i form av en
+        widget. Vennligst legg til en widget for å få opp været \n for info sjekk ut : http://www.vindsiden.no
+    </string>
+
     <string-array name="frequence_array">
         <item>5</item>
         <item>15</item>
         <item>30</item>
         <item>60</item>
+        <item>1</item>
     </string-array>
 
-	<string-array name="stationId_array">
+    <string-array name="stationId_array">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        </string-array>
-    
-    
+        <item>THIS XML TAG IS NOT IN USE - just present so the layout at dev time can be satisfied</item>
+    </string-array>
 </resources>
