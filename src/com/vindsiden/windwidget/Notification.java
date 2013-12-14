@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 import com.vindsiden.windwidget.model.Measurement;
+import com.vindsiden.windwidget.model.Spots;
 
 /**
  * Created with IntelliJ IDEA.
@@ -104,10 +105,12 @@ public class Notification {
 
         String anbefaling = "";
 
+        Spots spots = new Spots();
+
 
         //TODO : bruker skal kunne endre dette på egenhånd !
-        if (intavgWind > 5 && intavgWind < 12.0) { //avgWind større enn 5 og mindre enn 12
-            anbefaling = "Passe vind";
+        if (intavgWind > 6 && intavgWind < 12.0) { //avgWind større enn 6 og mindre enn 12
+            anbefaling = "Passe vind" + spots.getSpot(avgWind, avgDir);
 
 
         } else if (intavgWind > 12.0) {

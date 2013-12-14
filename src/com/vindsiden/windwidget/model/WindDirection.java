@@ -82,6 +82,9 @@ public class WindDirection {
             direction = "Nord";
 
 
+        } else if (intDegrees < 0) {
+            //Workaroud for when Vindsiden is reporting degrees under 0
+            direction = "";
         } else {
             direction = "Noe feil må ha skjedd her";
         }
