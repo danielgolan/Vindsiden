@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 import com.vindsiden.windwidget.model.Measurement;
 import com.vindsiden.windwidget.model.Spots;
+import com.vindsiden.windwidget.model.WindDirection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -85,7 +86,11 @@ public class Notification {
         //Conext can be found through getApplicationContext. Mesurment is used so that user
 
 
+        Spots spots = new Spots();
+        WindDirection windDirection = new WindDirection();
+
         String avgWind = mostRecentMesurment.getWindAvg();
+
         int intavgWind = (int) Double.parseDouble(avgWind);
 
         String maxWind = mostRecentMesurment.getWindMax();
@@ -101,16 +106,14 @@ public class Notification {
         int intTemp = (int) Double.parseDouble(temprature);
 
 
-        String Message = "Snitt vidmåling" + avgWind + "\n(" + " Maks vind" + maxWind + "Min vind" + minWind + ")\n" + "Vinden blåser " + avgDir + "grader" + "Tempraturen er : " + temprature;
+        String Message = "Snitt vidmåling" + avgWind + "\n" + "Vinden blåser " + windDirection.getWindDir(avgDir) + "\n" + "Tempraturen er : " + temprature;
 
         String anbefaling = "";
-
-        Spots spots = new Spots();
 
 
         //TODO : bruker skal kunne endre dette på egenhånd !
         if (intavgWind > 6 && intavgWind < 12.0) { //avgWind større enn 6 og mindre enn 12
-            anbefaling = "Passe vind" + spots.getSpot(avgWind, avgDir);
+            anbefaling = "Passe vind Dra til : " + spots.getSpot(avgWind, avgDir);
 
 
         } else if (intavgWind > 12.0) {
