@@ -131,10 +131,10 @@ public class Notification {
         int icon = R.drawable.icon;
 
 
-        Notification m = new Notification();
+        Notification notification = new Notification();
 
         //Context context, String title, String msg, String other)
-        m.createNotification(context, "Vindmåleren melder vind", anbefaling, Message, icon);
+        notification.createNotification(context, "Vindmåleren melder vind", anbefaling, Message, icon);
     }
 
 

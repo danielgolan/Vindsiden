@@ -38,10 +38,11 @@ public class MyActivity extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = "Notification";
-                Notification notification = new Notification();
-
+                //String s = "Notification";
+                //Notification notification = new Notification();
                 // notification.createNotification(getApplicationContext(),"Title","Message","Other me");
+                VindsidenUpdateService vindsidenUpdateService = new VindsidenUpdateService();
+                vindsidenUpdateService.updateNow();
 
 
             }
