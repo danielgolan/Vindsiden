@@ -99,7 +99,7 @@ public class VindsidenUpdateService {
             //   fillData(measurements);
             MyActivity myActivity = new MyActivity();
             myActivity.measurement2 = measurements.get(0);
-
+            //Commect
 
         }
 
