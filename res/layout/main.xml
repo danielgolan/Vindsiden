@@ -5,14 +5,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spin_spotvelger"/>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Dette er en applikasjon som henter xml fra Vindsiden.no og dermed viser det i form av en widget. Vennligst legg til en widget for å få opp været"
             android:id="@+id/textView"/>
-    <Button
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"/>
+            android:text="Navn : "
+            android:id="@+id/txt_spotName"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vind : "
+            android:id="@+id/txt_spotWindDir"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temp : "
+            android:id="@+id/txt_spotTemp"/>
 </LinearLayout>

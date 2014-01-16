@@ -31,7 +31,7 @@ public class VindsidenXMLParser {
     private static final String WIND_MIN_MEASUREMENT = "WindMin";
     private static final String TEMPRATURE_MEASUREMENT = "Temperature1";
     private static final String MEASUREMENT_TIME = "Time";
-    private static final String STATION_ID = "com.vindsiden.windwidget.StationID";
+    private static final String STATION_ID = "StationID";
     private static final String NAME_SPACE = null; // note: namespace usage is also set explicitly in the parse() method.
 
     public List<Measurement> parse(StringReader sr) throws XmlPullParserException, IOException {

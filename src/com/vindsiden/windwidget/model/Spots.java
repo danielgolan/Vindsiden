@@ -5,7 +5,7 @@ package com.vindsiden.windwidget.model;
  */
 public class Spots {
 
-    public String getSpot(String avgWind, String direction) {
+    public String getWindDirectionFromDegrees(String avgWind, String direction) {
 
         int intDegrees = (int) Double.parseDouble(direction);
         int intavgWind = Integer.parseInt(avgWind);
@@ -34,5 +34,19 @@ public class Spots {
 
 
         return suggestedSpot;
+    }
+
+
+    public String getSpotIdFromName(String spotName) {
+        String spotID = "";
+        if (spotName.equals("Larkollen")) {
+            spotID = "1";
+        } else if (spotName.equals("Hvasser")) {
+
+            spotID = "51";
+        }
+
+
+        return spotID;
     }
 }

@@ -83,7 +83,7 @@ public class Notification {
 
 
     public void compileNotification(Context context, Measurement mostRecentMesurment) {
-        //Conext can be found through getApplicationContext. Mesurment is used so that user
+        //Conext can be found through getApplicationContext. Measurement is used so that user
 
 
         Spots spots = new Spots();
@@ -113,7 +113,7 @@ public class Notification {
 
         //TODO : bruker skal kunne endre dette på egenhånd !
         if (intavgWind > 6 && intavgWind < 12.0) { //avgWind større enn 6 og mindre enn 12
-            anbefaling = "Passe vind Dra til : " + spots.getSpot(avgWind, avgDir);
+            anbefaling = "Passe vind Dra til : " + spots.getWindDirectionFromDegrees(avgWind, avgDir);
 
 
         } else if (intavgWind > 12.0) {

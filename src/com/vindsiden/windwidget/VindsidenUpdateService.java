@@ -18,13 +18,31 @@ public class VindsidenUpdateService {
 
     private static final String NEXT_SCHEDULE_URI_POSTFIX = "/next_schedule";
     private static final String WIDGET_URI_PREFIX = "/widget_id/";
+    List<Measurement> measurements = null;
 
-    public void updateNow() {
+    public void updateNow(String stationID, String from) {
         //upDateNow is just used to call the GetData method
 
-        String[] input = {String.valueOf("52")};
-        new GetData().execute(input);
-        Log.d("Vindsiden2" + "GetData", "GetData called");
+        //stationID = "1";
+        try {
+
+            if (stationID.equals("")) {
+                stationID = "1";
+                Log.d("Vindsiden2", "StationID = " + stationID);
+
+            }
+
+            Log.d("Vindsiden2", "StationID = " + stationID);
+            String[] input = {String.valueOf(stationID), from};
+            new GetData().execute(input);
+
+
+        } catch (Exception e) {
+            Log.d("Vindsiden2" + " UpdateNow", "Failed");
+
+
+        }
+
 
     }
 
@@ -32,7 +50,7 @@ public class VindsidenUpdateService {
     class GetData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... data) {
-            List<Measurement> measurements = null;
+
             String s = data.toString();
             Log.d("Vindsiden2 + Convert array to string", s);
 
@@ -42,6 +60,7 @@ public class VindsidenUpdateService {
                 Log.d("Vindsiden2", urlString);
                 measurements = (new VindsidenWebXmlReader()).loadXmlFromNetwork(urlString);
                 Log.d("Vindsiden2", measurements.toString());
+                //Filldata here
 
 
             } catch (IOException e) {
@@ -51,25 +70,41 @@ public class VindsidenUpdateService {
                 // not certain how robust throwing a runtime exception is, might break stuff with recurrence etc!
                 // throw new RuntimeException(getResources().getString(R.string.connection_error));
             } catch (XmlPullParserException e) {
-                Log.d("Vindsiden2", "An XmlPullParserException occured. Stack follows: ");
-                Log.d("Vindsiden2", e.getStackTrace().toString());
+                Log.d("Vindsiden", "An XmlPullParserException occured. Stack follows: ");
+                Log.d("Vindsiden", e.getStackTrace().toString());
                 //xmlRetrievalSuccessful = false;
                 // throw new RuntimeException(getResources().getString(R.string.xml_error));
             }
-            Measurement mostRecentMeasurement;
-            mostRecentMeasurement = measurements.get(0);
-            String ss = mostRecentMeasurement.getDirectionAvg();
-            Log.d("Vindsiden2 " + "Stattion ID er ", ss);
-            return measurements.toString();
+            Log.d("Vindsiden ", "Got data, now find measurment");
+
+            String Return = "";
+            int array = data.length;
+
+            if (array == 1) {
+                //stop
+                Return = "";
+
+
+            } else if (array == 2) {
+                Return = data[1].toString();
+            }
+
+
+            return Return;
         }
+
 
         protected void onPostExecute(String result) {
 
-            Log.d("Vindsiden2", result.toString());
+            //   fillData(measurements);
+            MyActivity myActivity = new MyActivity();
+            myActivity.measurement2 = measurements.get(0);
 
 
         }
 
+
     }
+
 
 }
