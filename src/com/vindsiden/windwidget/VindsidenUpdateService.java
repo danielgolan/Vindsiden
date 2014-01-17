@@ -13,8 +13,7 @@ import java.util.List;
  * Created by Daniel on 15.12.13.
  */
 public class VindsidenUpdateService {
-    //This class should Update Mesurments for all stations every 10mins
-    //Todo interval should be user set and not hardcoded
+
 
     private static final String NEXT_SCHEDULE_URI_POSTFIX = "/next_schedule";
     private static final String WIDGET_URI_PREFIX = "/widget_id/";
@@ -99,6 +98,7 @@ public class VindsidenUpdateService {
             //   fillData(measurements);
             MyActivity myActivity = new MyActivity();
             myActivity.measurement2 = measurements.get(0);
+            //ive also tried to create a setTextView method in MyActivity but this dosent seem to work either.
             //Commect
 
         }
