@@ -113,7 +113,7 @@ public class Notification {
 
         //TODO : bruker skal kunne endre dette på egenhånd !
         if (intavgWind > 6 && intavgWind < 12.0) { //avgWind større enn 6 og mindre enn 12
-            anbefaling = "Passe vind Dra til : " + spots.getWindDirectionFromDegrees(avgWind, avgDir);
+            anbefaling = "Passe vind Dra til : " + spots.getSuggestedSpot(avgWind, avgDir);
 
 
         } else if (intavgWind > 12.0) {

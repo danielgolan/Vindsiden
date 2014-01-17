@@ -4,18 +4,23 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
+import com.vindsiden.windwidget.config.WindWidgetConfig;
 import com.vindsiden.windwidget.model.Measurement;
 import com.vindsiden.windwidget.model.Spots;
+import com.vindsiden.windwidget.model.WindDirection;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,20 +35,61 @@ public class MyActivity extends Activity {
 
     //Activity which basicly is the GUI. The user can click the menu button to configure widgets from here.
     //TODO: Daniel add some fancy wind graphs
-    TextView txt_spotName;
-    TextView txt_spotTemp;
-    TextView txt_spotWind;
-    Measurement measurement2;
-    public Boolean b;
+    TextView txt_Name; //Spot name
+    TextView txt_Temp; //spot temprature
+    TextView txt_minWind; //Spot minimum wind (last 10 minutes)
+    TextView txt_maxWind; //Spot maximum wind (last 10 minutes)
+    TextView txt_avgWind; //Spot average wind (last 10 minutes)
+    TextView txt_windDir; //Spot wind direction (last 10 minutes)
+    TextView txt_suggestedSpot;
+    String spotName;
+    String spotID;
+    String suggestedSpot;
+    final Spots spots = new Spots();
+    final WindDirection windDirection = new WindDirection();
+
+
+    Measurement mostRecentMeasurement;
+    List<Measurement> measurements = null;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        txt_spotName = (TextView) findViewById(R.id.txt_spotName);
-        txt_spotTemp = (TextView) findViewById(R.id.txt_spotTemp);
-        txt_spotWind = (TextView) findViewById(R.id.txt_spotWindDir);
+        txt_Name = (TextView) findViewById(R.id.txt_Name);
+        txt_Temp = (TextView) findViewById(R.id.txt_Temp);
+        txt_windDir = (TextView) findViewById(R.id.txt_windDir);
+        txt_avgWind = (TextView) findViewById(R.id.txt_avgWind);
+        //  txt_maxWind = (TextView) findViewById(R.id.txt_maxWind);
+        //txt_minWind = (TextView) findViewById(R.id.txt_minWind);
+        txt_suggestedSpot = (TextView) findViewById(R.id.txt_suggestedSpot);
+        txt_Name.setText("");
+        txt_avgWind.setText("");
+        txt_Temp.setText("");
+        txt_windDir.setText("");
+//        txt_maxWind.setText("");
+        //      txt_minWind.setText("");
+        txt_avgWind.setText("");
+
+        CharSequence[] strings;
+
+        Resources res = getResources();
+        strings = res.getTextArray(R.array.spots);
+        String s = "";
+        for (int i = 0; i < strings.length; i++) {
+            s = strings[i].toString();
+            //Log.d("Vindsiden-Test",s);
+            spotID = spots.getSpotIdFromName(s);
+            if (spotID.equals("")) {
+
+            } else {
+                String[] input = {spotID};
+                new GetSuggestedSpot().execute(input);
+
+            }
+
+        }
 
 
         final Spinner spotChooser = (Spinner) findViewById(R.id.spin_spotvelger);
@@ -55,33 +101,19 @@ public class MyActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
 
-                //User selected a value in the spinner
-                //String s = String.valueOf(pos);
-                String spotName = (String) spotChooser.getItemAtPosition(pos);
-                
+                if (pos == 0) {
 
-              
-                Spots spots = new Spots();
-                spotName = spots.getSpotIdFromName(spotName);
-                //spotName now equals the ID instead of the Name
-                //Call the updateNow function with the ID and a debug parameter.
-                VindsidenUpdateService vindsidenUpdateService = new VindsidenUpdateService();
-                vindsidenUpdateService.updateNow(spotName, "user");
-                
-                //Here the code shoud somehow wait untill "measurement2" is set by the Async task.
-                //My biggest issue that i dont know how to do this code right.
-                
-                
-                
-                try {
-                    txt_spotName.setText(measurement2.getStationID());
 
-                } catch (Exception e) {
+                } else {
+                    spotName = (String) spotChooser.getItemAtPosition(pos);
 
+
+                    spotID = spots.getSpotIdFromName(spotName);
+
+                    String[] input = {spotID};
+                    new downloadOneMeasurment().execute(input);
 
                 }
-
-
             }
 
             @Override
@@ -99,13 +131,6 @@ public class MyActivity extends Activity {
         inflater.inflate(R.menu.menu, menu);
         return true;
 
-    }
-    
-    
-    public void setTextView (String s ){
-        //This should in theory work but i cant get it to setText.
-        //The error i get is basicly that "txt_spotname" = null
-        txt_spotName.setText(s);
     }
 
     //OnOptionsItemSelected is called when user clicks the menu/overflow button
@@ -144,6 +169,194 @@ public class MyActivity extends Activity {
         }
         return true;
 
+
+    }
+
+
+    class downloadOneMeasurment extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... data) {
+
+            String s = data.toString();
+            Log.d("Vindsiden2 + Convert array to string", s);
+
+            try {
+                String urlString = WindWidgetConfig.getVindsidenUrlPrefix() + data[0].toString()
+                        + WindWidgetConfig.getVindsidenUrlPostfix();
+                Log.d("Vindsiden2", urlString);
+                measurements = (new VindsidenWebXmlReader()).loadXmlFromNetwork(urlString);
+
+                //Filldata here
+
+
+            } catch (IOException e) {
+                Log.d("Vindsiden2", "An IO exception occured. Stack follows: ");
+                Log.d("Vindsiden2", e.getStackTrace().toString());
+                // xmlRetrievalSuccessful = false;
+                // not certain how robust throwing a runtime exception is, might break stuff with recurrence etc!
+                // throw new RuntimeException(getResources().getString(R.string.connection_error));
+            } catch (XmlPullParserException e) {
+                Log.d("Vindsiden", "An XmlPullParserException occured. Stack follows: ");
+                Log.d("Vindsiden", e.getStackTrace().toString());
+                //xmlRetrievalSuccessful = false;
+                // throw new RuntimeException(getResources().getString(R.string.xml_error));
+            }
+            Log.d("Vindsiden ", "Got data, now find measurment");
+
+
+            return null;
+        }
+
+
+        protected void onPostExecute(String result) {
+            boolean phonyMeasurment = false;
+
+
+            try {
+                mostRecentMeasurement = measurements.get(0);
+
+                float temp = Float.valueOf(mostRecentMeasurement.getTemprature());
+                if (temp <= (-20)) {
+                    phonyMeasurment = true;
+
+                } else if (temp >= (40)) {
+                    phonyMeasurment = true;
+
+
+                }
+
+                {
+                    phonyMeasurment = false;
+                }
+
+                if (phonyMeasurment == true) {
+                    Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil hos vindsiden, prøv en annen spot", Toast.LENGTH_SHORT).show();
+
+                    txt_Name.setText("");
+                    txt_avgWind.setText("");
+                    txt_Temp.setText("");
+                    txt_windDir.setText("");
+
+                    txt_avgWind.setText("");
+
+                } else if (phonyMeasurment == false) {
+                    txt_Name.setText("Viser info for " + spotName);
+                    txt_avgWind.setText("Snitt siste vindmåling er :" + mostRecentMeasurement.getWindAvg() + " M/S" + "\n" + "Maks vind : " + mostRecentMeasurement.getWindMax() + " M/S Min. vind : " + mostRecentMeasurement.getWindMin() + " M/S");
+
+
+                    txt_windDir.setText("Vinden blåser fra " + windDirection.getWindDir(mostRecentMeasurement.getDirectionAvg()));
+
+
+                    txt_Temp.setText("Temperaturen er : " + mostRecentMeasurement.getTemprature() + " grader");
+
+
+                }
+
+
+            } catch (Exception e) {
+
+                Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil, prøv en annen spot", Toast.LENGTH_SHORT).show();
+
+                txt_Name.setText("");
+                txt_avgWind.setText("");
+                txt_Temp.setText("");
+                txt_windDir.setText("");
+                Log.d("Vindsiden4", e.toString());
+
+            }
+
+
+        }
+
+
+    }
+
+    class GetSuggestedSpot extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... data) {
+
+            String s = data.toString();
+
+
+            try {
+                String urlString = WindWidgetConfig.getVindsidenUrlPrefix() + data[0].toString()
+                        + WindWidgetConfig.getVindsidenUrlPostfix();
+                Log.d("VindsidenSuggestedSpot", "URL downloading : " + urlString);
+                measurements = (new VindsidenWebXmlReader()).loadXmlFromNetwork(urlString);
+
+                //Filldata here
+
+
+            } catch (IOException e) {
+                Log.d("Vindsiden2", "An IO exception occured. Stack follows: ");
+                Log.d("Vindsiden2", e.getStackTrace().toString());
+                // xmlRetrievalSuccessful = false;
+                // not certain how robust throwing a runtime exception is, might break stuff with recurrence etc!
+                // throw new RuntimeException(getResources().getString(R.string.connection_error));
+            } catch (XmlPullParserException e) {
+                Log.d("Vindsiden", "An XmlPullParserException occured. Stack follows: ");
+                Log.d("Vindsiden", e.getStackTrace().toString());
+                //xmlRetrievalSuccessful = false;
+                // throw new RuntimeException(getResources().getString(R.string.xml_error));
+            }
+
+
+            return null;
+        }
+
+
+        protected void onPostExecute(String result) {
+
+
+            boolean phonyMeasurment = false;
+
+
+            try {
+                mostRecentMeasurement = measurements.get(0);
+
+                float temp = Float.valueOf(mostRecentMeasurement.getTemprature());
+
+                if (temp <= (-20)) {
+                    phonyMeasurment = true;
+
+                } else {
+                    phonyMeasurment = false;
+                }
+
+                if (phonyMeasurment == true) {
+                    // Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil, prøv en annen spot (Anbefalt spot)", Toast.LENGTH_SHORT).show();
+
+
+                } else if (phonyMeasurment == false) {
+                    //Get suggested spot
+
+
+                    Log.d("VindsidenSuggestedSpot", "wind avg : " + mostRecentMeasurement.getWindAvg());
+                    Log.d("VindsidenSuggestedSpot", "Direction avg: " + mostRecentMeasurement.getDirectionAvg());
+                    suggestedSpot += spots.getSuggestedSpot(mostRecentMeasurement.getWindAvg(), mostRecentMeasurement.getDirectionAvg());
+                    Log.d("VindsidenSuggestedSpot", "Suggested spot : " + suggestedSpot);
+
+                    if (suggestedSpot.equals("null")) {
+                        suggestedSpot = "Pr. nå er det ingen anbefalte spotter";
+
+                    }
+                    txt_suggestedSpot.setText(suggestedSpot);
+
+
+                }
+
+
+            } catch (Exception e) {
+
+                // Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil, prøv en annen spot (Anbefalt spot)", Toast.LENGTH_SHORT).show();
+
+
+                Log.d("VindsidenSuggestedSpot", e.toString());
+
+            }
+
+
+        }
 
     }
 

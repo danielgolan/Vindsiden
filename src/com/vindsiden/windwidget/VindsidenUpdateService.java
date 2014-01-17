@@ -13,7 +13,8 @@ import java.util.List;
  * Created by Daniel on 15.12.13.
  */
 public class VindsidenUpdateService {
-
+    //This class should Update Mesurments for all stations every 10mins
+    //Todo interval should be user set and not hardcoded
 
     private static final String NEXT_SCHEDULE_URI_POSTFIX = "/next_schedule";
     private static final String WIDGET_URI_PREFIX = "/widget_id/";
@@ -26,12 +27,12 @@ public class VindsidenUpdateService {
         try {
 
             if (stationID.equals("")) {
-                //Actually used for debugging
                 stationID = "1";
-       
+                Log.d("Vindsiden2", "StationID = " + stationID);
+
             }
 
-          //Start the GetData
+            Log.d("Vindsiden2", "StationID = " + stationID);
             String[] input = {String.valueOf(stationID), from};
             new GetData().execute(input);
 
@@ -95,11 +96,10 @@ public class VindsidenUpdateService {
 
         protected void onPostExecute(String result) {
 
-            //   fillData(measurements);
-            MyActivity myActivity = new MyActivity();
-            myActivity.measurement2 = measurements.get(0);
-            //ive also tried to create a setTextView method in MyActivity but this dosent seem to work either.
-            //Commect
+
+            //MyActivity myActivity = new MyActivity();
+            // myActivity.measurement2 = measurements.get(0);
+
 
         }
 
