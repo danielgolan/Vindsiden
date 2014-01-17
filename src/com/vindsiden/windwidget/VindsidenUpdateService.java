@@ -27,12 +27,12 @@ public class VindsidenUpdateService {
         try {
 
             if (stationID.equals("")) {
+                //Actually used for debugging
                 stationID = "1";
-                Log.d("Vindsiden2", "StationID = " + stationID);
-
+       
             }
 
-            Log.d("Vindsiden2", "StationID = " + stationID);
+          //Start the GetData
             String[] input = {String.valueOf(stationID), from};
             new GetData().execute(input);
 
