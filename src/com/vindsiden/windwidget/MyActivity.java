@@ -100,6 +100,13 @@ public class MyActivity extends Activity {
         return true;
 
     }
+    
+    
+    public void setTextView (String s ){
+        //This should in theory work but i cant get it to setText.
+        //The error i get is basicly that "txt_spotname" = null
+        txt_spotName.setText(s);
+    }
 
     //OnOptionsItemSelected is called when user clicks the menu/overflow button
     @Override
