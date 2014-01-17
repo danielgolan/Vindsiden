@@ -55,15 +55,24 @@ public class MyActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
 
-                String s = String.valueOf(pos);
+                //User selected a value in the spinner
+                //String s = String.valueOf(pos);
                 String spotName = (String) spotChooser.getItemAtPosition(pos);
+                
 
-
-                b = false;
+              
                 Spots spots = new Spots();
                 spotName = spots.getSpotIdFromName(spotName);
+                //spotName now equals the ID instead of the Name
+                //Call the updateNow function with the ID and a debug parameter.
                 VindsidenUpdateService vindsidenUpdateService = new VindsidenUpdateService();
                 vindsidenUpdateService.updateNow(spotName, "user");
+                
+                //Here the code shoud somehow wait untill "measurement2" is set by the Async task.
+                //My biggest issue that i dont know how to do this code right.
+                
+                
+                
                 try {
                     txt_spotName.setText(measurement2.getStationID());
 
