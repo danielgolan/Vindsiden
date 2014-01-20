@@ -97,7 +97,7 @@ public class VindsidenUpdateService {
         protected void onPostExecute(String result) {
 
 
-            //MyActivity myActivity = new MyActivity();
+            //Vindsiden myActivity = new Vindsiden();
             // myActivity.measurement2 = measurements.get(0);
 
 

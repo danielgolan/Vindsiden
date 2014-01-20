@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 
-public class MyActivity extends Activity {
+public class Vindsiden extends Activity {
 
     //Activity which basicly is the GUI. The user can click the menu button to configure widgets from here.
     //TODO: Daniel add some fancy wind graphs

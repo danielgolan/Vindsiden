@@ -35,7 +35,7 @@ public class Settings extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // MyActivity a = new MyActivity();
+                // Vindsiden a = new Vindsiden();
                 //  a.showNotification("string",getApplicationContext());
             }
         });
