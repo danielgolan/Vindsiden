@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import com.vindsiden.windwidget.model.Measurement;
 import com.vindsiden.windwidget.model.Spots;
 import com.vindsiden.windwidget.model.WindDirection;
@@ -18,7 +19,12 @@ import com.vindsiden.windwidget.model.WindDirection;
  * Time: 17:05
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class Notification {
+
+    Spots spots = new Spots();
+    WindDirection windDirection = new WindDirection();
 
     //android.support.v4.app.NotificationCompat.Builder
 
@@ -86,29 +92,31 @@ public class Notification {
         //Conext can be found through getApplicationContext. Measurement is used so that user
 
 
-        Spots spots = new Spots();
-        WindDirection windDirection = new WindDirection();
-
         String avgWind = mostRecentMesurment.getWindAvg();
 
         int intavgWind = (int) Double.parseDouble(avgWind);
 
         String maxWind = mostRecentMesurment.getWindMax();
-        int intmaxWind = (int) Double.parseDouble(maxWind);
+        //int intmaxWind = (int) Double.parseDouble(maxWind);
 
         String minWind = mostRecentMesurment.getWindMin();
-        int intminWind = (int) Double.parseDouble(minWind);
+        //int intminWind = (int) Double.parseDouble(minWind);
 
         String avgDir = mostRecentMesurment.getDirectionAvg();
-        int intavgDir = (int) Double.parseDouble(avgDir);
+        //int intavgDir = (int) Double.parseDouble(avgDir);
 
         String temprature = mostRecentMesurment.getTemprature();
-        int intTemp = (int) Double.parseDouble(temprature);
+        //int intTemp = (int) Double.parseDouble(temprature);
+
+        String spotID = mostRecentMesurment.getStationID();
+        String spotName = spots.getSpotNameFromID(spotID);
+
+        Log.d("VindsidenNotification", "spot ID : " + spotID + "spot name : " + spotName);
 
 
-        String Message = "Snitt vidmåling" + avgWind + "\n" + "Vinden blåser " + windDirection.getWindDir(avgDir) + "\n" + "Tempraturen er : " + temprature;
+        String Message = "Viser vindmåling for : " + spotName + "\n" + "Snitt vidmåling" + avgWind + "\n" + "Vinden blåser " + windDirection.getWindDir(avgDir) + "\n" + "Tempraturen er : " + temprature;
 
-        String anbefaling = "";
+        String anbefaling;
 
 
         //TODO : bruker skal kunne endre dette på egenhånd !
@@ -128,7 +136,7 @@ public class Notification {
         }
 
 
-        int icon = R.drawable.icon;
+        int icon = R.drawable.ic_launcher;
 
 
         Notification notification = new Notification();

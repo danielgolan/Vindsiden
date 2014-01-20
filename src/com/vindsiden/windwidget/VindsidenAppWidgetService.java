@@ -281,6 +281,7 @@ public class VindsidenAppWidgetService extends IntentService {
                 views.setBitmap(R.id.imageButton1, "setImageBitmap", bmResult);
             } else {
                 // for now, just draw a question mark if no valid direction
+                //TODO change image to add text so that the user knows why
                 views.setBitmap(R.id.imageButton1, "setImageBitmap",
                         BitmapFactory.decodeResource(getResources(), R.drawable.question));
             }

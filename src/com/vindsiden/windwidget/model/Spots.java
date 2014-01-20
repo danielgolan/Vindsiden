@@ -74,4 +74,40 @@ public class Spots {
 
         return spotID;
     }
+
+    public String getSpotNameFromID(String spotID) {
+        String spotName = "";
+
+        if (spotID.equals("1")) {
+            spotName = "Larkollen";
+        } else if (spotID.equals("51")) {
+
+            spotName = "Hvasser";
+        } else if (spotID.equals("105")) {
+
+            spotName = "Hvittingfoss";
+        } else if (spotID.equals("3")) {
+
+            spotName = "Verket";
+        } else if (spotID.equals("6")) {
+
+            spotName = "Hovden";
+        } else if (spotID.equals("9")) {
+
+            spotName = "Grøtfjord";
+        } else if (spotID.equals("12")) {
+
+            spotName = "Finnlandsfjellet";
+        } else if (spotID.equals("14")) {
+
+            spotName = "Breivikeidet";
+        } else if (spotID.equals("15")) {
+
+            spotName = "Sommarøy";
+        }
+
+
+        return spotName;
+
+    }
 }

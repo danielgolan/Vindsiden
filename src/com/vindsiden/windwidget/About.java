@@ -60,7 +60,7 @@ public class About {
         new AlertDialog.Builder(WidgetSettings)
                 .setTitle("About me")
                 .setCancelable(true)
-                .setIcon(R.drawable.icon)
+                .setIcon(R.drawable.ic_launcher)
                 .setPositiveButton("OK", null)
                 .setView(about)
                 .show();
