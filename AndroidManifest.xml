@@ -9,7 +9,7 @@
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name=".Vindsiden"
                   android:label="Vindsiden">
-        <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
@@ -23,6 +23,15 @@
             </intent-filter>
 
         </activity>
+        <activity android:name="SpotDetail"
+                  android:label="SpotDetail"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+
+        </activity>
+
 
         <activity android:name=".WidgetSettings"
                   android:label="WidgetSettings"

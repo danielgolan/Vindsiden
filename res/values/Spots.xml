@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="spots">
+        <item></item>
+        <item>Verket</item>
+        <item>Larkollen</item>
+        <item>Hvasser</item>
+        <item>Hovden</item>
+        <item>Grøtfjord</item>
+        <item>Finnlandsfjellet</item>
+        <item>Breivikeidet</item>
+        <item>Sommarøy</item>
+
+    </string-array>
+</resources>

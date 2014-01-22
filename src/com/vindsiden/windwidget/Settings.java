@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import com.vindsiden.windwidget.config.WindWidgetConfig;
 
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
@@ -30,7 +32,7 @@ public class Settings extends Activity {
         String customMessage = intent.getStringExtra("MESSAGE");
         appWidgetId = intent.getIntExtra(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID);
 
-        Button b = (Button) findViewById(R.id.refreshNow);
+        /* Button b = (Button) findViewById(R.id.refreshNow);
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +40,7 @@ public class Settings extends Activity {
                 // Vindsiden a = new Vindsiden();
                 //  a.showNotification("string",getApplicationContext());
             }
-        });
+        }); */
 
 
 
@@ -100,9 +102,11 @@ public class Settings extends Activity {
         }
         ;
         if (oldFreq == 1) {
+            //Used for debugging.
             defaultChoice = 4;
         }
-        ;//Used for debugging.
+        ;
+
 
         // @formatter:on
         freqSpinner.setSelection(defaultChoice);

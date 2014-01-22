@@ -37,14 +37,15 @@ public class Vindsiden extends Activity {
     //TODO: Daniel add some fancy wind graphs
     TextView txt_Name; //Spot name
     TextView txt_Temp; //spot temprature
-    TextView txt_minWind; //Spot minimum wind (last 10 minutes)
-    TextView txt_maxWind; //Spot maximum wind (last 10 minutes)
+    //TextView txt_minWind; //Spot minimum wind (last 10 minutes)
+    //TextView txt_maxWind; //Spot maximum wind (last 10 minutes)
     TextView txt_avgWind; //Spot average wind (last 10 minutes)
     TextView txt_windDir; //Spot wind direction (last 10 minutes)
     TextView txt_suggestedSpot;
     String spotName;
     String spotID;
     String suggestedSpot;
+    AutoCompleteTextView AcTv_sok;
     final Spots spots = new Spots();
     final WindDirection windDirection = new WindDirection();
 
@@ -57,6 +58,9 @@ public class Vindsiden extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+
+        //Setting up the GUI
         txt_Name = (TextView) findViewById(R.id.txt_Name);
         txt_Temp = (TextView) findViewById(R.id.txt_Temp);
         txt_windDir = (TextView) findViewById(R.id.txt_windDir);
@@ -64,13 +68,10 @@ public class Vindsiden extends Activity {
         //  txt_maxWind = (TextView) findViewById(R.id.txt_maxWind);
         //txt_minWind = (TextView) findViewById(R.id.txt_minWind);
         txt_suggestedSpot = (TextView) findViewById(R.id.txt_suggestedSpot);
-        txt_Name.setText("");
-        txt_avgWind.setText("");
-        txt_Temp.setText("");
-        txt_windDir.setText("");
-//        txt_maxWind.setText("");
-        //      txt_minWind.setText("");
-        txt_avgWind.setText("");
+
+        //Reset Textboxes
+        resetText();
+//
 
         CharSequence[] strings;
 
@@ -92,35 +93,27 @@ public class Vindsiden extends Activity {
         }
 
 
-        final Spinner spotChooser = (Spinner) findViewById(R.id.spin_spotvelger);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spots, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spotChooser.setAdapter(adapter);
+        AcTv_sok = (AutoCompleteTextView) findViewById(R.id.AcTv_sok);
+        String[] spotsArray = getResources().getStringArray(R.array.spots);
+        ArrayAdapter<String> AutoCompleteadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spotsArray);
+        AcTv_sok.setAdapter(AutoCompleteadapter);
 
-        spotChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AcTv_sok.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-
-                if (pos == 0) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
 
 
-                } else {
-                    spotName = (String) spotChooser.getItemAtPosition(pos);
-
-
-                    spotID = spots.getSpotIdFromName(spotName);
-
-                    String[] input = {spotID};
-                    new downloadOneMeasurment().execute(input);
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+                //spotName returner en String med navnet på det som er valgt
+                spotName = adapterView.getItemAtPosition(pos).toString();
+                //Sender inn spot navn og returnerer en ID
+                spotID = spots.getSpotIdFromName(spotName);
+                //downloadOneMeasurment tar inn en string med Vindsiden ID.
+                String[] input = {spotID};
+                new downloadOneMeasurment().execute(input);
 
             }
         });
+
 
     }
 
@@ -232,12 +225,8 @@ public class Vindsiden extends Activity {
                 if (phonyMeasurment == true) {
                     Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil hos vindsiden, prøv en annen spot", Toast.LENGTH_SHORT).show();
 
-                    txt_Name.setText("");
-                    txt_avgWind.setText("");
-                    txt_Temp.setText("");
-                    txt_windDir.setText("");
+                    resetText();
 
-                    txt_avgWind.setText("");
 
                 } else if (phonyMeasurment == false) {
                     txt_Name.setText("Viser info for " + spotName);
@@ -257,10 +246,7 @@ public class Vindsiden extends Activity {
 
                 Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil, prøv en annen spot", Toast.LENGTH_SHORT).show();
 
-                txt_Name.setText("");
-                txt_avgWind.setText("");
-                txt_Temp.setText("");
-                txt_windDir.setText("");
+                resetText();
                 Log.d("Vindsiden4", e.toString());
 
             }
@@ -360,5 +346,14 @@ public class Vindsiden extends Activity {
 
     }
 
+
+    private void resetText() {
+        txt_Name.setText("");
+        txt_avgWind.setText("");
+        txt_Temp.setText("");
+        txt_windDir.setText("");
+
+
+    }
 
 }

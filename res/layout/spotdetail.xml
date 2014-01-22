@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="200dp" android:layout_gravity="top">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView" android:src="@drawable/verket_graf"/>
+    </FrameLayout>
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="20dp" android:id="@+id/frameLayout"
+                 android:layout_marginTop="200dp">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:id="@+id/txt_avgWind" android:hint="Snitt Vind : " android:layout_marginLeft="10dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_maxWind" android:layout_gravity="center" android:hint="Max Vind"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_minWind" android:layout_gravity="right|center_vertical" android:hint="Min. Vind"
+                android:layout_marginRight="10dp"/>
+    </FrameLayout>
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/frameLayout2"
+                 android:layout_marginTop="220dp">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:id="@+id/imageView2" android:src="@drawable/demo_pil"/>
+    </FrameLayout>
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="50dp" android:id="@+id/frameLayout3"
+                 android:layout_gravity="bottom">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_temp" android:layout_gravity="left|center_vertical" android:hint="Temperatur"
+                android:layout_marginLeft="20dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_dirWind" android:layout_gravity="right|center_vertical"
+                android:hint="Vindretning" android:layout_marginRight="20dp"/>
+    </FrameLayout>
+</FrameLayout>
