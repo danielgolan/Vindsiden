@@ -13,9 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import com.vindsiden.windwidget.CustomAutoComplete.CustomAutoCompleteView;
+import com.vindsiden.windwidget.CustomAutoComplete.CustomAutocompleteTextChangedListener;
+import com.vindsiden.windwidget.Database.DataBaseHelper;
+import com.vindsiden.windwidget.Database.DatabaseHandler;
 import com.vindsiden.windwidget.config.WindWidgetConfig;
 import com.vindsiden.windwidget.model.Measurement;
 import com.vindsiden.windwidget.model.Spots;
+import com.vindsiden.windwidget.model.Sted;
 import com.vindsiden.windwidget.model.WindDirection;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -45,7 +50,15 @@ public class Vindsiden extends Activity {
     String spotName;
     String spotID;
     String suggestedSpot;
-    AutoCompleteTextView AcTv_sok;
+    public CustomAutoCompleteView AcTv_sok;
+    Button leggtilSted;
+    Button soekPaSted;
+    Button slettSted;
+    EditText et_soek;
+    EditText et_URL;
+    static Vindsiden vindsiden;
+
+
     final Spots spots = new Spots();
     final WindDirection windDirection = new WindDirection();
 
@@ -53,11 +66,49 @@ public class Vindsiden extends Activity {
     Measurement mostRecentMeasurement;
     List<Measurement> measurements = null;
 
+    // adapter for auto-complete
+    public ArrayAdapter<String> myAdapter;
+
+    // for database operations
+    public DatabaseHandler databaseHandler;
+
+
+    // just to add some initial value
+    public String[] item = new String[]{"Please search..."};
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        ViewServer.get(this).addWindow(this);
+        vindsiden = this;
+
+        final String DB_NAME = "YRSteder.sqlite";
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        // dataBaseHelper = new DataBaseHelper(this);
+
+        try {
+
+            dataBaseHelper.createDatabase();
+
+        } catch (Exception e) {
+
+            throw new Error("Unable to create database");
+
+        }
+
+        try {
+
+            dataBaseHelper.openDataBase();
+
+        } catch (Exception e) {
+
+            Log.e("Database", "Error");
+
+        }
 
 
         //Setting up the GUI
@@ -68,6 +119,12 @@ public class Vindsiden extends Activity {
         //  txt_maxWind = (TextView) findViewById(R.id.txt_maxWind);
         //txt_minWind = (TextView) findViewById(R.id.txt_minWind);
         txt_suggestedSpot = (TextView) findViewById(R.id.txt_suggestedSpot);
+        leggtilSted = (Button) findViewById(R.id.b_leggtilSted);
+        soekPaSted = (Button) findViewById(R.id.b_soekSted);
+        slettSted = (Button) findViewById(R.id.b_slettSted);
+        et_soek = (EditText) findViewById(R.id.et_databaseInput);
+        et_URL = (EditText) findViewById(R.id.et_Url);
+
 
         //Reset Textboxes
         resetText();
@@ -93,10 +150,47 @@ public class Vindsiden extends Activity {
         }
 
 
-        AcTv_sok = (AutoCompleteTextView) findViewById(R.id.AcTv_sok);
-        String[] spotsArray = getResources().getStringArray(R.array.spots);
-        ArrayAdapter<String> AutoCompleteadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spotsArray);
-        AcTv_sok.setAdapter(AutoCompleteadapter);
+        leggtilSted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //  nyttSted();
+            }
+        });
+
+        slettSted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //    SlettSted();
+
+            }
+        });
+
+        soekPaSted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //   SoekSted();
+
+            }
+        });
+
+        try {
+
+            databaseHandler = new DatabaseHandler(Vindsiden.this);
+            dataBaseHelper = new DataBaseHelper(Vindsiden.this);
+            insertSampleData();
+            AcTv_sok = (CustomAutoCompleteView) findViewById(R.id.AcTv_sok);
+            AcTv_sok.addTextChangedListener(new CustomAutocompleteTextChangedListener(this));
+            myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item);
+            AcTv_sok.setAdapter(myAdapter);
+
+
+        } catch (Exception e) {
+
+
+        }
+
 
         AcTv_sok.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,17 +198,31 @@ public class Vindsiden extends Activity {
 
 
                 //spotName returner en String med navnet på det som er valgt
-                spotName = adapterView.getItemAtPosition(pos).toString();
+                //spotName = adapterView.getItemAtPosition(pos).toString();
                 //Sender inn spot navn og returnerer en ID
-                spotID = spots.getSpotIdFromName(spotName);
+                //spotID = spots.getSpotIdFromName(spotName);
                 //downloadOneMeasurment tar inn en string med Vindsiden ID.
-                String[] input = {spotID};
-                new downloadOneMeasurment().execute(input);
+                // String[] input = {spotID};
+                //  new downloadOneMeasurment().execute(input);
+
+                SoekSted();
 
             }
         });
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ViewServer.get(this).removeWindow(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ViewServer.get(this).setFocusedWindow(this);
     }
 
 
@@ -165,6 +273,10 @@ public class Vindsiden extends Activity {
 
     }
 
+
+    public static Vindsiden getInstance() {
+        return vindsiden;
+    }
 
     class downloadOneMeasurment extends AsyncTask<String, Void, String> {
         @Override
@@ -353,6 +465,92 @@ public class Vindsiden extends Activity {
         txt_Temp.setText("");
         txt_windDir.setText("");
 
+
+    }
+
+    public void nyttSted() {
+        // DatabaseHandler databaseHandler = new DatabaseHandler(this, null, null, 1);
+        String URL = et_URL.getText().toString();
+        Sted sted = new Sted(et_soek.getText().toString(), URL);
+        //databaseHandler.addPlace(sted);
+        et_soek.setText("");
+        et_URL.setText("");
+
+
+    }
+
+    public void SoekSted() {
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.this);
+        Sted sted = dataBaseHelper.findPlace(AcTv_sok.getText().toString());
+        if (sted != null) {
+            //TODO Bygg om dette for å få mer info. Feks "get_id" må endres til annen info
+            et_soek.setText("ID = " + String.valueOf(sted.get_id()) + "Navn er : " + sted.get_stedsNavn());
+            et_URL.setText("URL er : " + sted.get_url());
+
+        } else {
+
+            et_soek.setText("Fant ikkeno !");
+        }
+
+
+    }
+    /*
+  public void SlettSted() {
+       // DatabaseHandler databaseHandler = new DatabaseHandler(this);
+        boolean result = databaseHandler.deletePlace(et_soek.getText().toString());
+        if (result) {
+            et_soek.setText("Sted slettet");
+            et_URL.setText("");
+
+        } else {
+            et_soek.setText("Fant ikkeno");
+
+        }
+
+
+    }      */
+
+    public String[] getItemsFromDb(String searchTerm) {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.this);
+        databaseHandler = new DatabaseHandler(Vindsiden.this);
+        //Add items on to the array dnamicly
+        List<Sted> places = dataBaseHelper.read(searchTerm);
+        int rowCount = places.size();
+
+        String[] item = new String[rowCount];
+        int x = 0;
+        for (Sted sted : places) {
+            item[x] = sted._stedsNavn;
+            x++;
+
+        }
+        return item;
+
+    }
+
+    public void insertSampleData() {
+
+        // CREATE
+     /*   databaseHandler.addPlace( new Sted("Larkollen","http://www.vindsiden.no/xml.aspx?id=1") );
+        databaseHandler.addPlace( new Sted("Hvittingfoss","http://www.vindsiden.no/xml.aspx?id=105") );
+        databaseHandler.addPlace( new Sted("Verket","http://www.vindsiden.no/xml.aspx?id=3") );
+        databaseHandler.addPlace( new Sted("Hovden","http://www.vindsiden.no/xml.aspx?id=6") );
+        databaseHandler.addPlace( new Sted("Grøtfjord","http://www.vindsiden.no/xml.aspx?id=9") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Finnlandsfjellet","http://www.vindsiden.no/xml.aspx?id=12") );
+        databaseHandler.addPlace( new Sted("Breivikeidet","http://www.vindsiden.no/xml.aspx?id=14") );
+        databaseHandler.addPlace( new Sted("Sommarøy","http://www.vindsiden.no/xml.aspx?id=15") );
+        databaseHandler.addPlace( new Sted("Eiken","http://www.vindsiden.no/xml.aspx?id=1003") );
+        databaseHandler.addPlace( new Sted("Vinje","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+        databaseHandler.addPlace( new Sted("Vangsvatnet","http://www.vindsiden.no/xml.aspx?id=11") );
+      */
 
     }
 

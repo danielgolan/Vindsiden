@@ -4,8 +4,12 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""/>
 
-    <AutoCompleteTextView
+    <com.vindsiden.windwidget.CustomAutoComplete.CustomAutoCompleteView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/AcTv_sok" android:hint="Skriv inn minimum 2 bokstaver for å søke"
@@ -35,5 +39,32 @@
             android:layout_height="wrap_content"
             android:text="Anbefalt spot"
             android:id="@+id/txt_suggestedSpot" android:layout_gravity="center_horizontal"
-            android:layout_marginTop="200dp"/>
+            android:layout_marginTop="100dp"/>
+    <EditText
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_ID" android:hint="ID her"/>
+    <EditText
+            android:layout_width="234dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_databaseInput" android:hint="Database input"/>
+    <EditText
+            android:layout_width="232dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_Url" android:hint="URL"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Søk på sted"
+            android:id="@+id/b_soekSted" android:layout_gravity="center_horizontal"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Slett Sted"
+            android:id="@+id/b_slettSted" android:layout_gravity="right"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Legg til sted"
+            android:id="@+id/b_leggtilSted"/>
 </LinearLayout>

@@ -4,6 +4,13 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/frameLayout2"
+                 android:layout_marginTop="220dp">
+        <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageView2" android:src="@drawable/demo_pil"/>
+    </FrameLayout>
     <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="200dp" android:layout_gravity="top">
@@ -12,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView" android:src="@drawable/verket_graf"/>
     </FrameLayout>
-    <FrameLayout android:layout_width="fill_parent" android:layout_height="20dp" android:id="@+id/frameLayout"
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="50dp" android:id="@+id/frameLayout"
                  android:layout_marginTop="200dp">
         <TextView
                 android:layout_width="fill_parent"
@@ -21,19 +28,18 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_maxWind" android:layout_gravity="center" android:hint="Max Vind"/>
+                android:id="@+id/txt_maxWind" android:layout_gravity="center_horizontal|top" android:hint="Max Vind"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_minWind" android:layout_gravity="right|center_vertical" android:hint="Min. Vind"
+                android:id="@+id/txt_minWind" android:layout_gravity="center_horizontal|right|top"
+                android:hint="Min. Vind"
                 android:layout_marginRight="10dp"/>
-    </FrameLayout>
-    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/frameLayout2"
-                 android:layout_marginTop="220dp">
-        <ImageView
+        <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="250dp"
-                android:id="@+id/imageView2" android:src="@drawable/demo_pil"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" android:layout_gravity="center_horizontal|bottom"
+                android:hint="Siste tid : "/>
     </FrameLayout>
     <FrameLayout android:layout_width="fill_parent" android:layout_height="50dp" android:id="@+id/frameLayout3"
                  android:layout_gravity="bottom">
