@@ -24,9 +24,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.vindsiden.windwidget/databases/";
 
     //Database file name
-    public static String DB_NAME = "YRSteder.sqlite";
+    public static String DB_NAME = "steder.sqlite";
     public static String COLUMN_NAME = "Stadnamn";
-    public static String TABLE_NAME = "noreg";
+    public static String TABLE_NAME = "Steder";
 
     public SQLiteDatabase database;
     private static Context context;
@@ -91,7 +91,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            Log.e("Database", "//database does't exist yet.");
+            Log.i("Database", "database does't exist yet.");
 
         }
 
@@ -173,6 +173,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sql += "SELECT * FROM " + TABLE_NAME;
         sql += " WHERE " + COLUMN_NAME + " LIKE '%" + searchTerm + "%'";
         //sql += " ORDER BY " + COLUMN_ID + " DESC";
+        //Sort based on Name and Accending F.ex Alpha Alhan2 and so on..
+        //  sql += " ORDER BY "+ COLUMN_NAME+" ASC";
         sql += " LIMIT 5";
 
 
@@ -213,9 +215,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();
             //Tallet på slutten under indikerer hvilket felt den henter fra. Dermed er det lett å hente f.eks URL eller lign
-            sted.set_id(Integer.parseInt(cursor.getString(0)));
-            sted.set_stedsNavn(cursor.getString(1));
-            sted.set_url(cursor.getString(4));
+
+//            if (cursor != null) sted.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
+            sted.setStedNavn(cursor.getString(1));     //Kollonne 1 = Stedsnavn
+            sted.setPrioritet(cursor.getString(2));     //Kollonne 2 = Prioritet
+            sted.setStedType(cursor.getString(3));  //Kollonne 3 = Stedstype
+            sted.setKommune(cursor.getString(4));   //Kolonne 4 = Kommune Navn
+            sted.setFylke(cursor.getString(5));    //Kollonne 5 = Fylke
+            sted.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
+            sted.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
+            sted.setHoyde(cursor.getString(8));    //Kollonne 8 = Høyde
+            sted.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
+            sted.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
+            sted.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
+            sted.setKilde(cursor.getString(12));    //Kolonne 12 = Kilde
+            sted.setInformasjon(cursor.getString(13));    //Kolonne 13 = Informasjon
+            sted.setVeibeskrivelse(cursor.getString(14));    //Kolonne 14 = Veibeskrivelse
+            sted.setVannforhold(cursor.getString(15));    //Kolonne 15 = Vannforhold
+            sted.setFasiliteter(cursor.getString(16));    //Kolonne 16 = Fasiliteter
+            sted.setEgnet_for(cursor.getString(17));    //Kolonne 17 = Egnet for
+            sted.setVindretning(cursor.getString(18));    //Kolonne 18 = Vindretning
             cursor.close();
 
         } else {
@@ -235,6 +254,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //String packageName = context.getPackageName();
     //DB_PATH = String.format("data/data/com.vindsiden.windwidget/databases/");//, packageName);
-    //DB_NAME = "YRSteder.sqlite";
+    //DB_NAME = "steder.sqlite";
 
 }

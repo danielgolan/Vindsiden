@@ -68,31 +68,31 @@ public class PresentationHelper {
         if (windStrength == Float.NaN) {
         }                 // keep 0 as the image.
         if (windStrength > 0) {
-            arrowPng = R.drawable.arrow;
+            arrowPng = R.drawable.arrow_flauvind;
         }
         if (windStrength >= 2.5) {
-            arrowPng = R.drawable.arrow2;
+            arrowPng = R.drawable.arrow_svakvind;
         }
         if (windStrength >= 5) {
-            arrowPng = R.drawable.arrow5;
+            arrowPng = R.drawable.arrow_lettbris;
         }
         if (windStrength >= 7.5) {
-            arrowPng = R.drawable.arrow7;
+            arrowPng = R.drawable.arrow_laberbris;
         }
         if (windStrength >= 10) {
-            arrowPng = R.drawable.arrow10;
+            arrowPng = R.drawable.arrow_friskbris;
         }
         if (windStrength >= 12.5) {
-            arrowPng = R.drawable.arrow12;
+            arrowPng = R.drawable.arrow_litenkuling;
         }
         if (windStrength >= 15) {
-            arrowPng = R.drawable.arrow15;
+            arrowPng = R.drawable.arrow_stivkuling;
         }
         if (windStrength >= 17.5) {
-            arrowPng = R.drawable.arrow17;
+            arrowPng = R.drawable.arrow_stekuling;
         }
         if (windStrength >= 20) {
-            arrowPng = R.drawable.arrow20;
+            arrowPng = R.drawable.arrow_merennsterkkuling;
         } // this gfx is the "max wind" gfx of this simple version
         // @formatter:on
         return arrowPng;
@@ -107,7 +107,7 @@ public class PresentationHelper {
         }                // signifies a
         if (dirInt >= -90) {
             directionString = ">";
-        }    // signifies western wind (a simple arrow pointing east)
+        }    // signifies western wind (a simple arrow_flauvind pointing east)
         if (dirInt >= -72) {
             directionString = "v>";
         }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import com.vindsiden.windwidget.R;
 import com.vindsiden.windwidget.Vindsiden;
 
 /**
@@ -40,7 +40,10 @@ public class CustomAutocompleteTextChangedListener implements TextWatcher {
         //Update the adapter
 
         Vindsiden.getInstance().myAdapter.notifyDataSetChanged();
-        Vindsiden.getInstance().myAdapter = new ArrayAdapter<String>(Vindsiden.getInstance(), android.R.layout.simple_dropdown_item_1line, Vindsiden.getInstance().item);
+
+        Vindsiden.getInstance().myAdapter = new StedAdapter(Vindsiden.getInstance(), R.layout.autocomplete_layout, Vindsiden.getInstance().item);
+
+        //  Vindsiden.getInstance().myAdapter = new ArrayAdapter<String>(Vindsiden.getInstance(), android.R.layout.simple_dropdown_item_1line, Vindsiden.getInstance().item);
         Vindsiden.getInstance().AcTv_sok.setAdapter(Vindsiden.getInstance().myAdapter);
 
 

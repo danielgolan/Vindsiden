@@ -245,11 +245,11 @@ public class VindsidenAppWidgetService extends IntentService {
                          * views.setTextViewText(R.id.widgetButton, windText);
                          */
 
-            // Very simply gfx support: First, choose a predrawn arrow based on strength
+            // Very simply gfx support: First, choose a predrawn arrow_flauvind based on strength
             int arrowPng = PresentationHelper.getWindStrengthDrawable(PresentationHelper
                     .getWindStrength(mostRecentMeasurement.getWindAvg()));
 
-            // rotate the predawn arrow depending on measured direction:
+            // rotate the predawn arrow_flauvind depending on measured direction:
             if ((mostRecentMeasurement != PHONY_MEASUREMENT)
                     && PresentationHelper.isValidDirection(mostRecentMeasurement.getDirectionAvg())) {
                 Bitmap bmpOriginal = BitmapFactory.decodeResource(this.getResources(), arrowPng);
