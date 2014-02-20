@@ -3,8 +3,12 @@ package com.vindsiden.windwidget;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +20,7 @@ import android.widget.*;
 import com.vindsiden.windwidget.CustomAutoComplete.CustomAutoCompleteView;
 import com.vindsiden.windwidget.CustomAutoComplete.CustomAutocompleteTextChangedListener;
 import com.vindsiden.windwidget.Database.DataBaseHelper;
+import com.vindsiden.windwidget.Location.MyLocationListener;
 import com.vindsiden.windwidget.config.WindWidgetConfig;
 import com.vindsiden.windwidget.model.Measurement;
 import com.vindsiden.windwidget.model.Spots;
@@ -46,7 +51,7 @@ public class Vindsiden extends Activity {
     TextView txt_avgWind; //Spot average wind (last 10 minutes)
     TextView txt_windDir; //Spot wind direction (last 10 minutes)
     TextView txt_suggestedSpot;
-    String spotName;
+    public String spotName;
     String spotID;
     String suggestedSpot;
     public CustomAutoCompleteView AcTv_sok;
@@ -84,10 +89,26 @@ public class Vindsiden extends Activity {
         ViewServer.get(this).addWindow(this);
         vindsiden = this;
 
-        final String DB_NAME = "steder.sqlite";
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener mlocationListener = new MyLocationListener();
+
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocationListener);
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //if (MyLocationListener.latitude>0){
+            String lat = String.valueOf(MyLocationListener.latitude);
+            String lon = String.valueOf(MyLocationListener.longitude);
+            // Toast.makeText(getApplicationContext(),"Location : \n" + "Lat : " + lat + "\n" + "Lontitude : " + lon,Toast.LENGTH_LONG).show();
+
+
+            //}
+        }
+
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
         // dataBaseHelper = new DataBaseHelper(this);
+
 
         try {
 
@@ -111,22 +132,13 @@ public class Vindsiden extends Activity {
 
 
         //Setting up the GUI
-        txt_Name = (TextView) findViewById(R.id.txt_Name);
-        txt_Temp = (TextView) findViewById(R.id.txt_Temp);
-        txt_windDir = (TextView) findViewById(R.id.txt_windDir);
+
         txt_avgWind = (TextView) findViewById(R.id.txt_avgWind);
-        //  txt_maxWind = (TextView) findViewById(R.id.txt_maxWind);
-        //txt_minWind = (TextView) findViewById(R.id.txt_minWind);
         txt_suggestedSpot = (TextView) findViewById(R.id.txt_suggestedSpot);
-        leggtilSted = (Button) findViewById(R.id.b_leggtilSted);
-        soekPaSted = (Button) findViewById(R.id.b_soekSted);
-        slettSted = (Button) findViewById(R.id.b_slettSted);
-        et_soek = (EditText) findViewById(R.id.et_databaseInput);
-        et_URL = (EditText) findViewById(R.id.et_Url);
 
 
         //Reset Textboxes
-        resetText();
+
 //
 
         CharSequence[] strings;
@@ -148,31 +160,6 @@ public class Vindsiden extends Activity {
 
         }
 
-
-        leggtilSted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //  nyttSted();
-            }
-        });
-
-        slettSted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //    SlettSted();
-
-            }
-        });
-
-        soekPaSted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //   SoekSted();
-
-            }
-        });
 
         try {
 
@@ -337,8 +324,6 @@ public class Vindsiden extends Activity {
                 if (phonyMeasurment == true) {
                     Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil hos vindsiden, prøv en annen spot", Toast.LENGTH_SHORT).show();
 
-                    resetText();
-
 
                 } else if (phonyMeasurment == false) {
                     txt_Name.setText("Viser info for " + spotName);
@@ -358,7 +343,7 @@ public class Vindsiden extends Activity {
 
                 Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil, prøv en annen spot", Toast.LENGTH_SHORT).show();
 
-                resetText();
+
                 Log.d("Vindsiden4", e.toString());
 
             }
@@ -459,27 +444,15 @@ public class Vindsiden extends Activity {
     }
 
 
-    private void resetText() {
-        txt_Name.setText("");
-        txt_avgWind.setText("");
-        txt_Temp.setText("");
-        txt_windDir.setText("");
+    public Sted createSted(String stednavn) {
 
-
-    }
-
-    public void nyttSted() {
-        // DatabaseHandler databaseHandler = new DatabaseHandler(this, null, null, 1);
-        String URL = et_URL.getText().toString();
-        Sted sted = new Sted(et_soek.getText().toString(), URL);
-        //databaseHandler.addPlace(sted);
-        et_soek.setText("");
-        et_URL.setText("");
-
-
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.getInstance());
+        Sted sted1 = dataBaseHelper.findPlace(stednavn);
+        return sted1;
     }
 
     public void SoekSted() {
+        //is triggered when a user clicks the choosen spot.
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.this);
         Sted sted = dataBaseHelper.findPlace(AcTv_sok.getText().toString());
@@ -495,6 +468,7 @@ public class Vindsiden extends Activity {
 
         Intent myIntent = new Intent(Vindsiden.this, SpotDetails.class);
         myIntent.putExtra("StedsNavn", sted.getStedNavn());
+        /*
         myIntent.putExtra("Kommune", sted.getKommune());
         myIntent.putExtra("Type", sted.getStedType());
         myIntent.putExtra("NB_Url", sted.getNB_url());
@@ -512,12 +486,21 @@ public class Vindsiden extends Activity {
         myIntent.putExtra("Vannforhold", sted.getVannforhold());
         myIntent.putExtra("Fasiliteter", sted.getFasiliteter());
         myIntent.putExtra("Egnet_for", sted.getEgnet_for());
-        myIntent.putExtra("Vindretning", sted.getVindretning());
+        myIntent.putExtra("Vindretning", sted.getVindretning());  */
+
+        //Update database and add another item to the List of most used places.
 
 
         startActivity(myIntent);
+        //spotName = sted.getStedNavn();
+        AcTv_sok.setText("");
 
 
+    }
+
+    public String[] getSpotsInTheArea(Location location) {
+
+        return null;
     }
 
 

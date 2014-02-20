@@ -113,5 +113,48 @@ public class WindDirection {
         return direction;
     }
 
+    public float getWindDeg(String input) {
+
+
+        float degree = 0;
+
+        if (input.equals("N")) {
+            degree = 270;
+        } else if (input.equals("NNE")) {
+            degree = 292;
+        } else if (input.equals("NE")) {
+            degree = 315;
+        } else if (input.equals("ENE")) {
+            degree = 337;
+        } else if (input.equals("E")) {
+            degree = 0;
+        } else if (input.equals("ESE")) {
+            degree = 22;
+        } else if (input.equals("SE")) {
+            degree = 45;
+        } else if (input.equals("SSE")) {
+            degree = 67;
+        } else if (input.equals("S")) {
+            degree = 90;
+        } else if (input.equals("SSW")) {
+            degree = 112;
+        } else if (input.equals("SW")) {
+            degree = 135;
+        } else if (input.equals("WSW")) {
+            degree = 157;
+        } else if (input.equals("W")) {
+            degree = 180;
+        } else if (input.equals("WNW")) {
+            degree = 202;
+        } else if (input.equals("NW")) {
+            degree = 225;
+        } else if (input.equals("NNW")) {
+            degree = 247;
+        }
+
+
+        return degree;
+    }
+
 
 }

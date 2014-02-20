@@ -41,9 +41,9 @@ public class StedAdapter extends ArrayAdapter<String> {
                 LayoutInflater inflater = ((Vindsiden) mContext).getLayoutInflater();
                 convertView = inflater.inflate(layoutResouceId, parent, false);
             }
-            Sted sted = new Sted();
+            Sted sted;
             DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.getInstance());
-            sted = dataBaseHelper.findPlace(items[position]);
+            sted = dataBaseHelper.findPlaceAutoComplete(items[position]);
 
 
             //  Take input
@@ -51,10 +51,10 @@ public class StedAdapter extends ArrayAdapter<String> {
             TextView stedsType = (TextView) convertView.findViewById(R.id.txt_AutoType);
             ImageView ikon = (ImageView) convertView.findViewById(R.id.imageView);
 
-            // stedNavn.setText(sted1.StedNavn);
+
             stedNavn.setText(sted.StedNavn);
             stedsType.setText(sted.StedType + " i " + sted.Kommune);
-            //stedsType.setText(sted.StedType);
+
             if (sted.StedType.equals("Kirke")) {
                 ikon.setImageResource(R.drawable.type_church);
 

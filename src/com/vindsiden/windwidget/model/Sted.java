@@ -25,6 +25,16 @@ public class Sted {
     public String Egnet_for;
     public String Vindretning;
 
+    public int getTimesUsed() {
+        return TimesUsed;
+    }
+
+    public void setTimesUsed(int timesUsed) {
+        TimesUsed = timesUsed;
+    }
+
+    public int TimesUsed;
+
 
     public Sted() {
 

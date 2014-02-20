@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navigate_tospot"
+          android:title="Naviger"></item>
+
+    <item android:id="@+id/yr"
+          android:title="Åpne YR graf"
+          android:icon="@drawable/yrlogo"
+          android:showAsAction="always"></item>
+    <item android:id="@+id/vindsiden"
+          android:title="Åpne vindsiden graf"
+          android:icon="@drawable/vindsiden"
+          android:showAsAction="always"></item>
+    <item android:id="@+id/informasjon"
+          android:title="Vis mer informasjon"
+          android:icon="@drawable/info_icon"
+          android:showAsAction="always"></item>
+    <item android:id="@+id/windrose"
+          android:title="Wind Rose"
+            ></item>
+</menu>

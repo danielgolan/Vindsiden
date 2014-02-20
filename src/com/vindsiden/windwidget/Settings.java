@@ -51,7 +51,7 @@ public class Settings extends Activity {
             spinnerArray.add(w.getStationName());
         }
         ArrayAdapter<String> spinnerArrayAdapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
+                new ArrayAdapter<String>(this, android.R.FrameLayout.simple_spinner_dropdown_item, spinnerArray);
         stationIdSpinner.setAdapter(spinnerArrayAdapter);
 
         stationIdSpinner.setSelection(

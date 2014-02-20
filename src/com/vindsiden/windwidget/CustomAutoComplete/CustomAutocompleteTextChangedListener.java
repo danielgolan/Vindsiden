@@ -38,12 +38,19 @@ public class CustomAutocompleteTextChangedListener implements TextWatcher {
 
 
         //Update the adapter
-
         Vindsiden.getInstance().myAdapter.notifyDataSetChanged();
 
-        Vindsiden.getInstance().myAdapter = new StedAdapter(Vindsiden.getInstance(), R.layout.autocomplete_layout, Vindsiden.getInstance().item);
+        //Making a new thread seems to improve perfomance
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Vindsiden.getInstance().myAdapter = new StedAdapter(Vindsiden.getInstance(), R.layout.autocomplete_layout, Vindsiden.getInstance().item);
 
-        //  Vindsiden.getInstance().myAdapter = new ArrayAdapter<String>(Vindsiden.getInstance(), android.R.layout.simple_dropdown_item_1line, Vindsiden.getInstance().item);
+            }
+        });
+
+        thread.run();
+
         Vindsiden.getInstance().AcTv_sok.setAdapter(Vindsiden.getInstance().myAdapter);
 
 

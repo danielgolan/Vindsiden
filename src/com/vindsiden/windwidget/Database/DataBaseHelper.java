@@ -52,12 +52,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         boolean dbExist = checkDataBase();
 
-        if (dbExist) {
+       /* if (dbExist) {
             //do nothing - database already exist
             Log.d("Database", "Database exists");
-        } else {
+        } else { */
 
-            //By calling this method and empty database will be created into the default system path
+        //By calling this method and empty database will be created into the default system path
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
 
@@ -71,7 +71,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 throw new Error("Error copying database");
 
             }
-        }
+        //  }
 
 
     }
@@ -205,6 +205,55 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public Sted findPlaceAutoComplete(String placeName) {
+
+        String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME + " =  \"" + placeName + "\"";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        Sted sted = new Sted();
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            //Tallet på slutten under indikerer hvilket felt den henter fra. Dermed er det lett å hente f.eks URL eller lign
+
+//            if (cursor != null) sted.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
+            sted.setStedNavn(cursor.getString(1));     //Kollonne 1 = Stedsnavn
+            //sted.setPrioritet(cursor.getString(2));     //Kollonne 2 = Prioritet
+            sted.setStedType(cursor.getString(3));  //Kollonne 3 = Stedstype
+            sted.setKommune(cursor.getString(4));   //Kolonne 4 = Kommune Navn
+            //sted.setFylke(cursor.getString(5));    //Kollonne 5 = Fylke
+            //sted.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
+            //sted.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
+            //sted.setHoyde(cursor.getString(8));    //Kollonne 8 = Høyde
+            //sted.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
+            //sted.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
+            //sted.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
+            //sted.setKilde(cursor.getString(12));    //Kolonne 12 = Kilde
+            //sted.setInformasjon(cursor.getString(13));    //Kolonne 13 = Informasjon
+            //sted.setVeibeskrivelse(cursor.getString(14));    //Kolonne 14 = Veibeskrivelse
+            //sted.setVannforhold(cursor.getString(15));    //Kolonne 15 = Vannforhold
+            //sted.setFasiliteter(cursor.getString(16));    //Kolonne 16 = Fasiliteter
+            //sted.setEgnet_for(cursor.getString(17));    //Kolonne 17 = Egnet for
+            //sted.setVindretning(cursor.getString(18));    //Kolonne 18 = Vindretning
+
+
+            cursor.close();
+
+        } else {
+            sted = null;
+
+        }
+        database.close();
+        return sted;
+
+
+    }
+
+    public void updateTimesUsed(String placeName) {
+
+
+    }
+
     public Sted findPlace(String placeName) {
 
         String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME + " =  \"" + placeName + "\"";
@@ -235,6 +284,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sted.setFasiliteter(cursor.getString(16));    //Kolonne 16 = Fasiliteter
             sted.setEgnet_for(cursor.getString(17));    //Kolonne 17 = Egnet for
             sted.setVindretning(cursor.getString(18));    //Kolonne 18 = Vindretning
+            sted.setTimesUsed(cursor.getInt(19)); //Kolonne 19 = Antall ganger brukt
+
+
             cursor.close();
 
         } else {
@@ -246,6 +298,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     }
+
 
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
