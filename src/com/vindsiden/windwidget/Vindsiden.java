@@ -23,8 +23,8 @@ import com.vindsiden.windwidget.Database.DataBaseHelper;
 import com.vindsiden.windwidget.Location.MyLocationListener;
 import com.vindsiden.windwidget.config.WindWidgetConfig;
 import com.vindsiden.windwidget.model.Measurement;
+import com.vindsiden.windwidget.model.Place;
 import com.vindsiden.windwidget.model.Spots;
-import com.vindsiden.windwidget.model.Sted;
 import com.vindsiden.windwidget.model.WindDirection;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -93,7 +93,7 @@ public class Vindsiden extends Activity {
         LocationListener mlocationListener = new MyLocationListener();
 
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocationListener);
+        //     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocationListener);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             //if (MyLocationListener.latitude>0){
@@ -444,22 +444,22 @@ public class Vindsiden extends Activity {
     }
 
 
-    public Sted createSted(String stednavn) {
+    public Place createSted(String stednavn) {
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.getInstance());
-        Sted sted1 = dataBaseHelper.findPlace(stednavn);
-        return sted1;
+        Place place1 = dataBaseHelper.findPlace(stednavn);
+        return place1;
     }
 
     public void SoekSted() {
         //is triggered when a user clicks the choosen spot.
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.this);
-        Sted sted = dataBaseHelper.findPlace(AcTv_sok.getText().toString());
-        if (sted != null) {
+        Place place = dataBaseHelper.findPlace(AcTv_sok.getText().toString());
+        if (place != null) {
             //TODO Bygg om dette for å få mer info. Feks "getId" må endres til annen info
-            //    et_soek.setText("ID = " + String.valueOf(sted.getId()) + "Navn er : " + sted.getStedType());
-            //    et_URL.setText("URL er : " + sted.getNB_url());
+            //    et_soek.setText("ID = " + String.valueOf(place.getId()) + "Navn er : " + place.getPlaceType());
+            //    et_URL.setText("URL er : " + place.getNB_url());
 
         } else {
 
@@ -467,32 +467,32 @@ public class Vindsiden extends Activity {
         }
 
         Intent myIntent = new Intent(Vindsiden.this, SpotDetails.class);
-        myIntent.putExtra("StedsNavn", sted.getStedNavn());
+        myIntent.putExtra("StedsNavn", place.getPlaceName());
         /*
-        myIntent.putExtra("Kommune", sted.getKommune());
-        myIntent.putExtra("Type", sted.getStedType());
-        myIntent.putExtra("NB_Url", sted.getNB_url());
-        myIntent.putExtra("EN_Url", sted.getEN_url());
-        myIntent.putExtra("Lon", sted.getLon());
-        myIntent.putExtra("Lat", sted.getLat());
-        myIntent.putExtra("KomuneNummer", sted.getKommuneNummer());
-        myIntent.putExtra("Prioritet", sted.getPrioritet());
-        myIntent.putExtra("Fylke", sted.getFylke());
-        myIntent.putExtra("Hoyde", sted.getHoyde());
-        myIntent.putExtra("Vindsiden_URL", sted.getVindsiden_URL());
-        myIntent.putExtra("Kilde", sted.getKilde());
-        myIntent.putExtra("Informasjon", sted.getInformasjon());
-        myIntent.putExtra("Veibeskrivelse", sted.getVeibeskrivelse());
-        myIntent.putExtra("Vannforhold", sted.getVannforhold());
-        myIntent.putExtra("Fasiliteter", sted.getFasiliteter());
-        myIntent.putExtra("Egnet_for", sted.getEgnet_for());
-        myIntent.putExtra("Vindretning", sted.getVindretning());  */
+        myIntent.putExtra("Municipality", place.getMunicipality());
+        myIntent.putExtra("Type", place.getPlaceType());
+        myIntent.putExtra("NB_Url", place.getNB_url());
+        myIntent.putExtra("EN_Url", place.getEN_url());
+        myIntent.putExtra("Lon", place.getLon());
+        myIntent.putExtra("Lat", place.getLat());
+        myIntent.putExtra("KomuneNummer", place.getMunicipalityNumber());
+        myIntent.putExtra("Priority", place.getPriority());
+        myIntent.putExtra("County", place.getCounty());
+        myIntent.putExtra("Height", place.getHeight());
+        myIntent.putExtra("Vindsiden_URL", place.getVindsiden_URL());
+        myIntent.putExtra("Source", place.getSource());
+        myIntent.putExtra("Description", place.getDescription());
+        myIntent.putExtra("RoadDescription", place.getRoadDescription());
+        myIntent.putExtra("WaterConditions", place.getWaterConditions());
+        myIntent.putExtra("Facilities", place.getFacilities());
+        myIntent.putExtra("Suited_For", place.getSuited_For());
+        myIntent.putExtra("WindDirection", place.getWindDirection());  */
 
         //Update database and add another item to the List of most used places.
 
 
         startActivity(myIntent);
-        //spotName = sted.getStedNavn();
+        //spotName = place.getPlaceName();
         AcTv_sok.setText("");
 
 
@@ -508,13 +508,13 @@ public class Vindsiden extends Activity {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.this);
         //databaseHandler = new DatabaseHandler(Vindsiden.this);
         //Add items on to the array dnamicly
-        List<Sted> places = dataBaseHelper.read(searchTerm);
+        List<Place> places = dataBaseHelper.CreateSuggestionList(searchTerm);
         int rowCount = places.size();
 
         String[] item = new String[rowCount];
         int x = 0;
-        for (Sted sted : places) {
-            item[x] = sted.StedNavn;
+        for (Place place : places) {
+            item[x] = place.PlaceName;
 
             x++;
 

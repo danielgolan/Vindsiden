@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.vindsiden.windwidget.config.WindWidgetConfig;
 import com.vindsiden.windwidget.model.Measurement;
-import com.vindsiden.windwidget.model.Sted;
+import com.vindsiden.windwidget.model.Place;
 import com.vindsiden.windwidget.model.WindDirection;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -35,7 +35,7 @@ public class SpotDetails extends Activity {
 
     Measurement mostRecentMeasurement;
     List<Measurement> measurements = null;
-    Sted sted = new Sted();
+    Place place = new Place();
     WindDirection windDirection = new WindDirection();
     String windavg;
     float Start, End;
@@ -55,8 +55,8 @@ public class SpotDetails extends Activity {
         Intent intent = getIntent();
         //Set strings to information from the intent
 
-        //Create a intance of Sted with information
-        Sted sted = vindsiden.createSted(intent.getStringExtra("StedsNavn"));
+        //Create a intance of Place with information
+        Place place = vindsiden.createSted(intent.getStringExtra("StedsNavn"));
 
         //
         FrameLayout = (FrameLayout) findViewById(R.id.frameLayout5);
@@ -72,29 +72,31 @@ public class SpotDetails extends Activity {
         tv_ms = (TextView) findViewById(R.id.tv_overview_windAVG);
 
 
-        if (sted.getVindretning().contains("-")) {
-            String s = sted.getVindretning();
+        if (place.getWindDirection().contains("-")) {
+            String s = place.getWindDirection();
             String[] strings = s.split("-");
             Start = windDirection.getWindDeg(strings[0]);
             End = windDirection.getWindDeg(strings[1]);
 
-        } else if (sted.getVindretning().contains("Alle")) {
+        } else if (place.getWindDirection().contains("Alle")) {
             Start = 0;
             End = 360;
         } else {
-            Log.d("Overview", "Strind is not Valid");
+            Log.d("Overview", "String is not Valid");
         }
 
-
+        /**
+         * Creates an instance of the ActionBar class and sets place name and
+         * other information in the sub-title
+         */
         ActionBar actionBar = getActionBar();
-        actionBar.setTitle(sted.getStedNavn());
+        actionBar.setTitle(place.getPlaceName());
+        actionBar.setSubtitle(place.getPlaceType() + " i " + place.getMunicipality());
 
-        actionBar.setSubtitle(sted.getStedType() + " i " + sted.getKommune());
 
+        //final String Lon_String = String.valueOf(place.getLon());
 
-        final String Lon_String = String.valueOf(sted.getLon());
-
-        final String Lat_String = String.valueOf(sted.getLat());
+        // final String Lat_String = String.valueOf(place.getLat());
 
 
        /*
@@ -117,14 +119,14 @@ public class SpotDetails extends Activity {
         });    */
 
       /*
-        tv_Navn.setText(sted.getStedNavn());
-        tv_Bygd.setText(sted.getStedType());
+        tv_Navn.setText(place.getPlaceName());
+        tv_Bygd.setText(place.getPlaceType());
 
-        if (sted.getKilde().equals("Vindsiden")||sted.getKilde().equals("Kitemekka")) {
-            tv_Informasjon.setText(sted.getInformasjon());
-            tv_EgnetFor.setText(sted.getEgnet_for());
-            tv_Fasiliteter.setText(sted.getFasiliteter());
-            tv_Vannforhold.setText(sted.getVannforhold());
+        if (place.getSource().equals("Vindsiden")||place.getSource().equals("Kitemekka")) {
+            tv_Informasjon.setText(place.getDescription());
+            tv_EgnetFor.setText(place.getSuited_For());
+            tv_Fasiliteter.setText(place.getFacilities());
+            tv_Vannforhold.setText(place.getWaterConditions());
         } else {
             tv_Informasjon.setVisibility(View.GONE);
             tv_EgnetFor.setVisibility(View.GONE);
@@ -139,16 +141,16 @@ public class SpotDetails extends Activity {
         //tv_Url.setText(Url);
         //Linkify.addLinks(tv_Url,Linkify.ALL) ;
         // tv_Url.getLinksClickable(true);
-        tv_Kommune.setText(sted.getKommune());
-        String URL = sted.getNB_url();
+        tv_Kommune.setText(place.getMunicipality());
+        String URL = place.getNB_url();
         URL = URL.replace("/varsel.xml", "");
 
 
         String webUrl = URL + "/meteogram.png";
         webView.loadUrl(webUrl);  */
 
-        if (sted.getVindsiden_URL() != null) {
-            String[] input = {sted.getVindsiden_URL()};
+        if (place.getVindsiden_URL() != null) {
+            String[] input = {place.getVindsiden_URL()};
             new downloadOneMeasurment().execute(input);
 
         } else {
@@ -195,9 +197,6 @@ public class SpotDetails extends Activity {
 
                 break;
 
-            case R.id.About:
-                About.Show(this);
-
 
                 //TODO : Add featurerequest/send email to developer
                 //http://stackoverflow.com/questions/2197741/how-to-send-email-from-my-android-application
@@ -208,6 +207,11 @@ public class SpotDetails extends Activity {
 
 
     }
+
+    /**
+     * downloadOneMeasurment gets one a list of measurments from Vindsiden.no
+     * Now the class is set to only get the last measurement
+     */
 
 
     class downloadOneMeasurment extends AsyncTask<String, Void, String> {
@@ -252,11 +256,13 @@ public class SpotDetails extends Activity {
 
 
             try {
+                //Get mostRecentMeasurment from a list of measurements
                 mostRecentMeasurement = measurements.get(0);
 
                 float temp = Float.valueOf(mostRecentMeasurement.getTemprature());
 
                 //If temperature is below -20 or above +40 the measurment is probably wrong
+                //TODO: Find a smarter way to solve this.
                 if (temp <= (-20)) {
                     phonyMeasurment = true;
 
@@ -270,20 +276,21 @@ public class SpotDetails extends Activity {
                 }
 
                 if (phonyMeasurment == true) {
+                    //TODO: Change hardoced text to ba a String resource
                     Toast.makeText(getApplicationContext(), "Her har det skjedd noe feil" + "\n" + "Vennligst prøv en annen spot", Toast.LENGTH_SHORT).show();
 
 
                 } else if (phonyMeasurment == false) {
                     windavg = mostRecentMeasurement.getWindAvg();
                     String String_windDirection = mostRecentMeasurement.getDirectionAvg();
-                    ImageView iv_Arrow = (ImageView) findViewById(R.id.iv_overview_arrow);
+                    ImageView ImageView_Overview_Arrow = (ImageView) findViewById(R.id.iv_overview_arrow);
                     Bitmap myImg = BitmapFactory.decodeResource(getResources(), R.drawable.arrow);
 
                     Matrix matrix = new Matrix();
                     float f = Float.valueOf(String_windDirection);
                     matrix.postRotate(f);
                     Bitmap rotated = Bitmap.createBitmap(myImg, 0, 0, myImg.getWidth(), myImg.getHeight(), matrix, true);
-                    iv_Arrow.setImageBitmap(rotated);
+                    ImageView_Overview_Arrow.setImageBitmap(rotated);
 
                     tv_ms.setText(windavg + "M/S");
 

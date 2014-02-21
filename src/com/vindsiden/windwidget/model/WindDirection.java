@@ -7,6 +7,14 @@ public class WindDirection {
 
     //TODO Bruk strings.xml og ikke hardkodet string
 
+    /**
+     * Takes a String as input the String format should be wind directions in degrees
+     *
+     * @param degrees example of valid input : 10,60,230
+     * @return Returns a String with winddirection in Words
+     * For example : Nord, Nordøst, Vest
+     */
+
     public String getWindDir(String degrees) {
 
 
@@ -112,6 +120,16 @@ public class WindDirection {
 
         return direction;
     }
+
+    /**
+     * Takes a String as input the String format should be wind directions in capital letters
+     *
+     * @param input example of valid input : WSW,W,N
+     * @return Returns a float with winddirection in Degrees, Note the wind degrees is actually circle degrees
+     * which meens that 0 is East and NOT Noth.
+     * This is because i a circle 0 = East while in wind measurments 0  = North
+     * For example : 315, 67
+     */
 
     public float getWindDeg(String input) {
 

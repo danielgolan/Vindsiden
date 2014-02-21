@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import com.vindsiden.windwidget.model.Sted;
+import com.vindsiden.windwidget.model.Place;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -165,9 +165,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-
-    public List<Sted> read(String searchTerm) {
-        List<Sted> recordList = new ArrayList<Sted>();
+    /**
+     * CreateSuggestionList takes in a search-String and returns a list of places.
+     *
+     * @param searchTerm
+     * @return
+     */
+    public List<Place> CreateSuggestionList(String searchTerm) {
+        List<Place> recordList = new ArrayList<Place>();
         //Select query
         String sql = "";
         sql += "SELECT * FROM " + TABLE_NAME;
@@ -175,7 +180,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         //sql += " ORDER BY " + COLUMN_ID + " DESC";
         //Sort based on Name and Accending F.ex Alpha Alhan2 and so on..
         //  sql += " ORDER BY "+ COLUMN_NAME+" ASC";
-        sql += " LIMIT 5";
+        sql += " LIMIT 10";
 
 
         //Create instance of database
@@ -192,10 +197,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
                 //Create a string with the objectName
                 String objectName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                //Create a new "Sted" with the object name
-                Sted sted = new Sted(objectName);
+                //Create a new "Place" with the object name
+                Place place = new Place(objectName);
 
-                recordList.add(sted);
+                recordList.add(place);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -205,46 +210,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public Sted findPlaceAutoComplete(String placeName) {
+    /**
+     * The findPlaceAutoComplete takes in a placename (String) and returns a Place filled with Stedsnavn,Stedstype and Municipality.
+     * @param placeName
+     * @return Place object filled with Stedsnavn, Stedstype and Municipality.
+     */
+
+    public Place findPlaceAutoComplete(String placeName) {
 
         String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME + " =  \"" + placeName + "\"";
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(query, null);
-        Sted sted = new Sted();
+        Place place = new Place();
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();
             //Tallet på slutten under indikerer hvilket felt den henter fra. Dermed er det lett å hente f.eks URL eller lign
 
-//            if (cursor != null) sted.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
-            sted.setStedNavn(cursor.getString(1));     //Kollonne 1 = Stedsnavn
-            //sted.setPrioritet(cursor.getString(2));     //Kollonne 2 = Prioritet
-            sted.setStedType(cursor.getString(3));  //Kollonne 3 = Stedstype
-            sted.setKommune(cursor.getString(4));   //Kolonne 4 = Kommune Navn
-            //sted.setFylke(cursor.getString(5));    //Kollonne 5 = Fylke
-            //sted.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
-            //sted.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
-            //sted.setHoyde(cursor.getString(8));    //Kollonne 8 = Høyde
-            //sted.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
-            //sted.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
-            //sted.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
-            //sted.setKilde(cursor.getString(12));    //Kolonne 12 = Kilde
-            //sted.setInformasjon(cursor.getString(13));    //Kolonne 13 = Informasjon
-            //sted.setVeibeskrivelse(cursor.getString(14));    //Kolonne 14 = Veibeskrivelse
-            //sted.setVannforhold(cursor.getString(15));    //Kolonne 15 = Vannforhold
-            //sted.setFasiliteter(cursor.getString(16));    //Kolonne 16 = Fasiliteter
-            //sted.setEgnet_for(cursor.getString(17));    //Kolonne 17 = Egnet for
-            //sted.setVindretning(cursor.getString(18));    //Kolonne 18 = Vindretning
+//            if (cursor != null) place.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
+            place.setPlaceName(cursor.getString(1));     //Kollonne 1 = Stedsnavn
+            //place.setPriority(cursor.getString(2));     //Kollonne 2 = Priority
+            place.setPlaceType(cursor.getString(3));  //Kollonne 3 = Stedstype
+            place.setMunicipality(cursor.getString(4));   //Kolonne 4 = Municipality Navn
+            //place.setCounty(cursor.getString(5));    //Kollonne 5 = County
+            //place.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
+            //place.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
+            //place.setHeight(cursor.getString(8));    //Kollonne 8 = Høyde
+            //place.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
+            //place.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
+            //place.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
+            //place.setSource(cursor.getString(12));    //Kolonne 12 = Source
+            //place.setDescription(cursor.getString(13));    //Kolonne 13 = Description
+            //place.setRoadDescription(cursor.getString(14));    //Kolonne 14 = RoadDescription
+            //place.setWaterConditions(cursor.getString(15));    //Kolonne 15 = WaterConditions
+            //place.setFacilities(cursor.getString(16));    //Kolonne 16 = Facilities
+            //place.setSuited_For(cursor.getString(17));    //Kolonne 17 = Egnet for
+            //place.setWindDirection(cursor.getString(18));    //Kolonne 18 = WindDirection
 
 
             cursor.close();
 
         } else {
-            sted = null;
+            place = null;
 
         }
         database.close();
-        return sted;
+        return place;
 
 
     }
@@ -254,59 +265,50 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public Sted findPlace(String placeName) {
+    public Place findPlace(String placeName) {
 
         String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME + " =  \"" + placeName + "\"";
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(query, null);
-        Sted sted = new Sted();
+        Place place = new Place();
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();
             //Tallet på slutten under indikerer hvilket felt den henter fra. Dermed er det lett å hente f.eks URL eller lign
 
-//            if (cursor != null) sted.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
-            sted.setStedNavn(cursor.getString(1));     //Kollonne 1 = Stedsnavn
-            sted.setPrioritet(cursor.getString(2));     //Kollonne 2 = Prioritet
-            sted.setStedType(cursor.getString(3));  //Kollonne 3 = Stedstype
-            sted.setKommune(cursor.getString(4));   //Kolonne 4 = Kommune Navn
-            sted.setFylke(cursor.getString(5));    //Kollonne 5 = Fylke
-            sted.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
-            sted.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
-            sted.setHoyde(cursor.getString(8));    //Kollonne 8 = Høyde
-            sted.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
-            sted.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
-            sted.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
-            sted.setKilde(cursor.getString(12));    //Kolonne 12 = Kilde
-            sted.setInformasjon(cursor.getString(13));    //Kolonne 13 = Informasjon
-            sted.setVeibeskrivelse(cursor.getString(14));    //Kolonne 14 = Veibeskrivelse
-            sted.setVannforhold(cursor.getString(15));    //Kolonne 15 = Vannforhold
-            sted.setFasiliteter(cursor.getString(16));    //Kolonne 16 = Fasiliteter
-            sted.setEgnet_for(cursor.getString(17));    //Kolonne 17 = Egnet for
-            sted.setVindretning(cursor.getString(18));    //Kolonne 18 = Vindretning
-            sted.setTimesUsed(cursor.getInt(19)); //Kolonne 19 = Antall ganger brukt
+//            if (cursor != null) place.setId(Integer.parseInt(cursor.getString(0)));  //Kollonne 0 = Kommunenummer
+            place.setPlaceName(cursor.getString(1));     //Kollonne 1 = Stedsnavn
+            place.setPriority(cursor.getString(2));     //Kollonne 2 = Priority
+            place.setPlaceType(cursor.getString(3));  //Kollonne 3 = Stedstype
+            place.setMunicipality(cursor.getString(4));   //Kolonne 4 = Municipality Navn
+            place.setCounty(cursor.getString(5));    //Kollonne 5 = County
+            place.setLat(cursor.getFloat(6));    //Kollonne 6 = Lat
+            place.setLon(cursor.getFloat(7));    //Kollonne 7 = Long
+            place.setHeight(cursor.getString(8));    //Kollonne 8 = Høyde
+            place.setNB_url(cursor.getString(9));    //Kollonne 9 = URL Bokmål
+            place.setEN_url(cursor.getString(10));    //Kollonne 10 = URL Engelsk
+            place.setVindsiden_URL(cursor.getString(11));    //Kollonne 11 = Vindsiden URL
+            place.setSource(cursor.getString(12));    //Kolonne 12 = Source
+            place.setDescription(cursor.getString(13));    //Kolonne 13 = Description
+            place.setRoadDescription(cursor.getString(14));    //Kolonne 14 = RoadDescription
+            place.setWaterConditions(cursor.getString(15));    //Kolonne 15 = WaterConditions
+            place.setFacilities(cursor.getString(16));    //Kolonne 16 = Facilities
+            place.setSuited_For(cursor.getString(17));    //Kolonne 17 = Egnet for
+            place.setWindDirection(cursor.getString(18));    //Kolonne 18 = WindDirection
+            // place.setTimesUsed(cursor.getInt(19)); //Kolonne 19 = Antall ganger brukt
 
 
             cursor.close();
 
         } else {
-            sted = null;
+            place = null;
 
         }
         database.close();
-        return sted;
+        return place;
 
 
     }
 
-
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
-
-
-    //String packageName = context.getPackageName();
-    //DB_PATH = String.format("data/data/com.vindsiden.windwidget/databases/");//, packageName);
-    //DB_NAME = "steder.sqlite";
 
 }

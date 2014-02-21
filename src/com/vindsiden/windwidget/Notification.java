@@ -132,7 +132,7 @@ public class Notification {
 
 
         } else {
-            anbefaling = "Det skjedde en feil et sted..";
+            anbefaling = "Det skjedde en feil et place..";
         }
 
 

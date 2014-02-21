@@ -11,7 +11,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/AutoComp_soek" android:layout_gravity="center_vertical"
-                android:hint="Søk på sted.." android:password="true"/>
+                android:hint="Søk på place.." android:password="true"/>
     </FrameLayout>
     <FrameLayout
             android:layout_width="200dp"

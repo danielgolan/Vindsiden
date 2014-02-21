@@ -30,10 +30,10 @@
                     android:text="Bygd i Ryyge"/>
         </LinearLayout>
 
-        <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/imageView" android:layout_gravity="right" android:src="@drawable/ic_launcher"/>
+        <!--   <ImageView
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:id="@+id/imageView" android:layout_gravity="right" android:src="@drawable/ic_launcher"/> -->
     </LinearLayout>
 
 

@@ -217,7 +217,7 @@ public class VindsidenAppWidgetService extends IntentService {
             // make sure we always have some data in a Measurement object here.
             mostRecentMeasurement = PHONY_MEASUREMENT;
         } else {
-            // assume the most recent data is read first from the XML - it probably is, but there's always possibility for
+            // assume the most recent data is CreateSuggestionList first from the XML - it probably is, but there's always possibility for
             // error
             mostRecentMeasurement = measurements.get(0);
             Notification n = new Notification();

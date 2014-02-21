@@ -76,7 +76,7 @@ public class VindsidenXMLParser {
     }
 
     // Parses the contents of an entry. If it encounters specific tags, hands them off
-    // to their respective "read" methods for processing. Otherwise, skips the tag.
+    // to their respective "CreateSuggestionList" methods for processing. Otherwise, skips the tag.
     private Measurement readMeasurement(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NAME_SPACE, LVL2_TAG);
         String stationID = "", time = "", windAvg = "", windMax = "", windMin = "", directionAvg = "", temprature = "";

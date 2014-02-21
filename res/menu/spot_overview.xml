@@ -12,8 +12,8 @@
           android:title="Åpne vindsiden graf"
           android:icon="@drawable/vindsiden"
           android:showAsAction="always"></item>
-    <item android:id="@+id/informasjon"
-          android:title="Vis mer informasjon"
+    <item android:id="@+id/description"
+          android:title="Vis mer description"
           android:icon="@drawable/info_icon"
           android:showAsAction="always"></item>
     <item android:id="@+id/windrose"

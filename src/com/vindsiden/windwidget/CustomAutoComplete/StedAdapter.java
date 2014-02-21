@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.vindsiden.windwidget.Database.DataBaseHelper;
 import com.vindsiden.windwidget.R;
 import com.vindsiden.windwidget.Vindsiden;
-import com.vindsiden.windwidget.model.Sted;
+import com.vindsiden.windwidget.model.Place;
 
 /**
  * Created by Daniel on 02.02.14.
@@ -41,44 +40,44 @@ public class StedAdapter extends ArrayAdapter<String> {
                 LayoutInflater inflater = ((Vindsiden) mContext).getLayoutInflater();
                 convertView = inflater.inflate(layoutResouceId, parent, false);
             }
-            Sted sted;
+            Place place;
             DataBaseHelper dataBaseHelper = new DataBaseHelper(Vindsiden.getInstance());
-            sted = dataBaseHelper.findPlaceAutoComplete(items[position]);
+            place = dataBaseHelper.findPlaceAutoComplete(items[position]);
 
 
             //  Take input
+
+            //  ImageView ikon = (ImageView) convertView.findViewById(R.id.imageView);
             TextView stedNavn = (TextView) convertView.findViewById(R.id.txt_AutoName);
             TextView stedsType = (TextView) convertView.findViewById(R.id.txt_AutoType);
-            ImageView ikon = (ImageView) convertView.findViewById(R.id.imageView);
 
-
-            stedNavn.setText(sted.StedNavn);
-            stedsType.setText(sted.StedType + " i " + sted.Kommune);
-
-            if (sted.StedType.equals("Kirke")) {
+            stedNavn.setText(place.PlaceName);
+            stedsType.setText(place.PlaceType + " i " + place.Municipality);
+/*
+            if (place.PlaceType.equals("Kirke")) {
                 ikon.setImageResource(R.drawable.type_church);
 
-            } else if (sted.StedType.equals("Kitespot")) {
+            } else if (place.PlaceType.equals("Kitespot")) {
                 ikon.setImageResource(R.drawable.type_kite);
 
-            } else if (sted.StedType.equals("Windsurfingspot")) {
+            } else if (place.PlaceType.equals("Windsurfingspot")) {
                 ikon.setImageResource(R.drawable.type_windsurfing);
 
-            } else if (sted.StedType.equals("By")) {
+            } else if (place.PlaceType.equals("By")) {
                 ikon.setImageResource(R.drawable.type_city);
 
-            } else if (sted.StedType.equals("Byområde")) {
+            } else if (place.PlaceType.equals("Byområde")) {
                 ikon.setImageResource(R.drawable.type_city);
 
-            } else if (sted.StedType.equals("Flyplass")) {
+            } else if (place.PlaceType.equals("Flyplass")) {
                 ikon.setImageResource(R.drawable.type_airport);
 
-            } else if (sted.StedType.equals("Turisthytte")) {
+            } else if (place.PlaceType.equals("Turisthytte")) {
                 ikon.setImageResource(R.drawable.type_hut);
 
             } else {
                 ikon.setImageDrawable(null);
-            }
+            } */
 
 
         } catch (NullPointerException e) {
